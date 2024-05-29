@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>2024년 5월, 6월 안지영 러닝 챌린지 save 아니 왜 저장이 안 되지</title>
+<title>2024년 5월 26일부터 6월 달력</title>
 <style>
     table {
         width: 100%;
@@ -18,8 +18,8 @@
 </head>
 <body>
 
-<h2>2024년 5월 러닝</h2>
-<table id="may-calendar">
+<h2>2024년 5월 26일부터 6월 달력</h2>
+<table id="may-june-calendar">
     <thead>
         <tr>
             <th>일</th>
@@ -32,25 +32,7 @@
         </tr>
     </thead>
     <tbody>
-        <!-- 여기에 5월 달력 날짜를 추가하는 JavaScript 코드가 들어갈 것입니다. -->
-    </tbody>
-</table>
-
-<h2>2024년 6월 러닝</h2>
-<table id="june-calendar">
-    <thead>
-        <tr>
-            <th>일</th>
-            <th>월</th>
-            <th>화</th>
-            <th>수</th>
-            <th>목</th>
-            <th>금</th>
-            <th>토</th>
-        </tr>
-    </thead>
-    <tbody>
-        <!-- 여기에 6월 달력 날짜를 추가하는 JavaScript 코드가 들어갈 것입니다. -->
+        <!-- 여기에 5월 26일부터 6월 달력 날짜를 추가하는 JavaScript 코드가 들어갈 것입니다. -->
     </tbody>
 </table>
 
@@ -58,40 +40,31 @@
     // 각 사람의 이름 배열
     const names = ['코승현', '코지영', '안지영', '챌린지', '모두', '참여하는', '거죠?'];
 
-    // 5월과 6월의 달력을 생성하는 함수
-    function createCalendar(month, tableId) {
+    // 5월 26일부터 6월 달력을 생성하는 함수
+    function createCalendar(tableId) {
         const table = document.getElementById(tableId);
         const tbody = table.querySelector('tbody');
 
-        // 날짜 정보를 가져오기 위한 Date 객체 생성
-        const date = new Date(2024, month, 1);
-        const lastDay = new Date(2024, month + 1, 0).getDate();
+        // 시작 날짜 설정 (2024년 5월 26일)
+        const startDate = new Date(2024, 4, 26); // 월은 0부터 시작하므로 5월은 4로 표현
 
         let html = '';
 
         // 날짜 채우기
-        for (let i = 0; i < 6; i++) { // 최대 6주
+        let date = new Date(startDate); // 시작 날짜로 설정
+        while (date.getMonth() === 4 || date.getMonth() === 5) { // 5월과 6월만 출력
             html += '<tr>';
             for (let j = 0; j < 7; j++) { // 요일 (일 ~ 토)
-                if (i === 0 && j < date.getDay()) {
-                    html += '<td></td>'; // 빈 셀 추가
-                } else {
-                    const day = date.getDate();
-                    if (!(day === 29 && i === 4)) { // 29일이 포함된 마지막 주 제외
-                        html += `<td>${day}`;
-                        // 여기에 체크리스트 및 완료 여부를 추가하는 코드를 작성할 수 있습니다.
-                        // 각각의 이름을 체크박스에 추가합니다.
-                        for (let k = 0; k < 7; k++) {
-                            html += `<input type="checkbox" id="checkbox_${day}_${k}" onchange="updateCompletion(${day}, ${k}, this.checked)">`;
-                            html += `<label for="checkbox_${day}_${k}">${names[k]}</label><br>`;
-                        }
-                        html += '</td>';
-                    }
-                    date.setDate(day + 1); // 다음 날짜로 이동
+                const day = date.getDate();
+                html += `<td>${day}`;
+                // 여기에 체크리스트 및 완료 여부를 추가하는 코드를 작성할 수 있습니다.
+                // 각각의 이름을 체크박스에 추가합니다.
+                for (let k = 0; k < 7; k++) {
+                    html += `<input type="checkbox" id="checkbox_${day}_${k}" onchange="updateCompletion(${day}, ${k}, this.checked)">`;
+                    html += `<label for="checkbox_${day}_${k}">${names[k]}</label><br>`;
                 }
-                if (date.getMonth() !== month || date.getDate() > lastDay) {
-                    break; // 다음 달로 이동하거나 마지막 날짜를 넘어가면 종료
-                }
+                html += '</td>';
+                date.setDate(day + 1); // 다음 날짜로 이동
             }
             html += '</tr>';
         }
@@ -105,34 +78,8 @@
         console.log(`Day ${day}, Person ${names[personIndex]}, Checked: ${checked}`);
     }
 
-    // 5월과 6월의 달력을 생성합니다.
-    createCalendar(4, 'may-calendar'); // 5월은 4를 넘깁니다. (0부터 시작)
-    createCalendar(5, 'june-calendar'); // 6월은 5를 넘깁니다.
-
-    // 완료 여부 업데이트
-function updateCompletion(day, personIndex, checked) {
-    // 로컬 저장소에 체크 상태 저장
-    const key = `completion_${day}_${personIndex}`;
-    localStorage.setItem(key, checked ? 'completed' : 'incomplete');
-    console.log(`Day ${day}, Person ${names[personIndex]}, Checked: ${checked}`);
-}
-
-// 페이지 로드 시 저장된 체크 상태 복원
-window.onload = function() {
-    for (let i = 1; i <= 31; i++) { // 5월의 일 수
-        for (let j = 0; j < 7; j++) {
-            const key = `completion_${i}_${j}`;
-            const value = localStorage.getItem(key);
-            if (value === 'completed') {
-                const checkbox = document.getElementById(`checkbox_${i}_${j}`);
-                if (checkbox) {
-                    checkbox.checked = true;
-                }
-            }
-        }
-    }
-};
-
+    // 5월 26일부터 6월 달력을 생성합니다.
+    createCalendar('may-june-calendar');
 </script>
 
 </body>
