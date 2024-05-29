@@ -108,6 +108,31 @@
     // 5월과 6월의 달력을 생성합니다.
     createCalendar(4, 'may-calendar'); // 5월은 4를 넘깁니다. (0부터 시작)
     createCalendar(5, 'june-calendar'); // 6월은 5를 넘깁니다.
+
+    // 완료 여부 업데이트
+function updateCompletion(day, personIndex, checked) {
+    // 로컬 저장소에 체크 상태 저장
+    const key = `completion_${day}_${personIndex}`;
+    localStorage.setItem(key, checked ? 'completed' : 'incomplete');
+    console.log(`Day ${day}, Person ${names[personIndex]}, Checked: ${checked}`);
+}
+
+// 페이지 로드 시 저장된 체크 상태 복원
+window.onload = function() {
+    for (let i = 1; i <= 31; i++) { // 5월의 일 수
+        for (let j = 0; j < 7; j++) {
+            const key = `completion_${i}_${j}`;
+            const value = localStorage.getItem(key);
+            if (value === 'completed') {
+                const checkbox = document.getElementById(`checkbox_${i}_${j}`);
+                if (checkbox) {
+                    checkbox.checked = true;
+                }
+            }
+        }
+    }
+};
+
 </script>
 
 </body>
