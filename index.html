@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>2024년 5월, 6월 볼빨간사춘기 안지영 챌린지 달력</title>
+<title>2024년 5월, 6월 안지영 챌린지</title>
 <style>
     table {
         width: 100%;
@@ -18,7 +18,7 @@
 </head>
 <body>
 
-<h2>2024년 5월 달리기</h2>
+<h2>2024년 5월</h2>
 <table id="may-calendar">
     <thead>
         <tr>
@@ -36,7 +36,7 @@
     </tbody>
 </table>
 
-<h2>2024년 6월 달리기</h2>
+<h2>2024년 6월</h2>
 <table id="june-calendar">
     <thead>
         <tr>
@@ -55,6 +55,9 @@
 </table>
 
 <script>
+    // 각 사람의 이름 배열
+    const names = ['코', '승', '현', '안', '지', '영', '사랑해'];
+
     // 5월과 6월의 달력을 생성하는 함수
     function createCalendar(month, tableId) {
         const table = document.getElementById(tableId);
@@ -74,14 +77,16 @@
                     html += '<td></td>'; // 빈 셀 추가
                 } else {
                     const day = date.getDate();
-                    html += `<td>${day}`;
-                    // 여기에 체크리스트 및 완료 여부를 추가하는 코드를 작성할 수 있습니다.
-                    // 예를 들어, 체크박스를 추가하고 각각의 체크박스에 이벤트를 연결하여 완료 여부를 추적할 수 있습니다.
-                    for (let k = 0; k < 7; k++) {
-                        html += `<input type="checkbox" id="checkbox_${day}_${k}" onchange="updateCompletion(${day}, ${k}, this.checked)">`;
-                        html += `<label for="checkbox_${day}_${k}">Person ${k+1}</label><br>`;
+                    if (!(day === 29 && i === 4)) { // 29일이 포함된 마지막 주 제외
+                        html += `<td>${day}`;
+                        // 여기에 체크리스트 및 완료 여부를 추가하는 코드를 작성할 수 있습니다.
+                        // 각각의 이름을 체크박스에 추가합니다.
+                        for (let k = 0; k < 7; k++) {
+                            html += `<input type="checkbox" id="checkbox_${day}_${k}" onchange="updateCompletion(${day}, ${k}, this.checked)">`;
+                            html += `<label for="checkbox_${day}_${k}">${names[k]}</label><br>`;
+                        }
+                        html += '</td>';
                     }
-                    html += '</td>';
                     date.setDate(day + 1); // 다음 날짜로 이동
                 }
                 if (date.getMonth() !== month || date.getDate() > lastDay) {
@@ -97,7 +102,7 @@
     // 완료 여부 업데이트
     function updateCompletion(day, personIndex, checked) {
         // 여기에 완료 여부를 업데이트하는 코드를 작성할 수 있습니다.
-        console.log(`Day ${day}, Person ${personIndex + 1}, Checked: ${checked}`);
+        console.log(`Day ${day}, Person ${names[personIndex]}, Checked: ${checked}`);
     }
 
     // 5월과 6월의 달력을 생성합니다.
